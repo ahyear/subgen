@@ -93,7 +93,7 @@ def receive_webhook():
 
 def gen_subtitles(filename, inputwav, finalsubname):
     strip_audio(filename)
-    run_whisper(inputwav, finalsubname))
+    run_whisper(inputwav, finalsubname)
 
 def strip_audio(filename):
     print("Starting strip audio")

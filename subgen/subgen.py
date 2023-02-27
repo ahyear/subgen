@@ -30,7 +30,7 @@ namesublang = os.getenv('NAMESUBLANG', "aa")
 updaterepo = converttobool(os.getenv('UPDATEREPO', "True"))
 skipifinternalsublang = os.getenv('SKIPIFINTERNALSUBLANG', "eng")
 webhookport = os.getenv('WEBHOOKPORT', 8090)
-taargetlang = os.getenv('TARGETLANG',"en")
+targetlang = os.getenv('TARGETLANG',"en")
 lt = LibreTranslateAPI(os.getenv('LIBRETRANSLATE',"http://127.0.0.1:5000" ))
 
 app = Flask(__name__)
@@ -107,7 +107,7 @@ def run_whisper(inputwav, finalsubname):
     print("Starting whisper")
     os.chdir("/whisper.cpp")
     command = lt.translate(("./main -m models/ggml-{}.bin -of \"{}\" -t {} -p {} -osrt -f \"{}\"" .format(
-        whisper_model, finalsubname, whisper_threads, whisper_processors, inputwav)),"en",fr")
+        whisper_model, finalsubname, whisper_threads, whisper_processors, inputwav)),"en",targetlang)
     if (whisper_speedup):
         command = command.replace("-osrt", "-osrt -su")
     print("Command: " + command)

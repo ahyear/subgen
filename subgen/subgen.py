@@ -6,6 +6,7 @@ import glob
 import pathlib
 import requests
 import subprocess
+from libretranslatepy import LibreTranslateAPI
 from flask import Flask, request
 import xml.etree.ElementTree as ET
         
@@ -29,7 +30,8 @@ namesublang = os.getenv('NAMESUBLANG', "aa")
 updaterepo = converttobool(os.getenv('UPDATEREPO', "True"))
 skipifinternalsublang = os.getenv('SKIPIFINTERNALSUBLANG', "eng")
 webhookport = os.getenv('WEBHOOKPORT', 8090)
-inputlang = os.getenv('TARGETLANG',"en")
+taargetlang = os.getenv('TARGETLANG',"en")
+lt = LibreTranslateAPI(os.getenv('LIBRETRANSLATE',"http://127.0.0.1:5000" ))
 
 app = Flask(__name__)
 
@@ -91,7 +93,7 @@ def receive_webhook():
 
 def gen_subtitles(filename, inputwav, finalsubname):
     strip_audio(filename)
-    run_whisper(inputwav, finalsubname)
+    run_whisper(inputwav, finalsubname))
 
 def strip_audio(filename):
     print("Starting strip audio")
@@ -104,15 +106,15 @@ def strip_audio(filename):
 def run_whisper(inputwav, finalsubname):
     print("Starting whisper")
     os.chdir("/whisper.cpp")
-    command = "./main -m models/ggml-{}.bin -of \"{}\" -t {} -p {} -osrt -f \"{}\" -l {} " .format(
-        whisper_model, finalsubname, whisper_threads, whisper_processors, inputwav, inputlang)
+    command = lt.translate(("./main -m models/ggml-{}.bin -of \"{}\" -t {} -p {} -osrt -f \"{}\"" .format(
+        whisper_model, finalsubname, whisper_threads, whisper_processors, inputwav)),"en",fr")
     if (whisper_speedup):
         command = command.replace("-osrt", "-osrt -su")
     print("Command: " + command)
     subprocess.call(command, shell=True)
 
     print("Done with whisper")
-    
+
 def get_file_name(item_id, plexserver, plextoken):
     url = f"{plexserver}/library/metadata/{item_id}"
 

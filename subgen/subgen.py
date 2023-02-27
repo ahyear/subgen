@@ -29,6 +29,7 @@ namesublang = os.getenv('NAMESUBLANG', "aa")
 updaterepo = converttobool(os.getenv('UPDATEREPO', "True"))
 skipifinternalsublang = os.getenv('SKIPIFINTERNALSUBLANG', "eng")
 webhookport = os.getenv('WEBHOOKPORT', 8090)
+inputlang = os.getenv('TARGETLANG',"en")
 
 app = Flask(__name__)
 
@@ -103,8 +104,8 @@ def strip_audio(filename):
 def run_whisper(inputwav, finalsubname):
     print("Starting whisper")
     os.chdir("/whisper.cpp")
-    command = "./main -m models/ggml-{}.bin -of \"{}\" -t {} -p {} -osrt -f \"{}\"" .format(
-        whisper_model, finalsubname, whisper_threads, whisper_processors, inputwav)
+    command = "./main -m models/ggml-{}.bin -of \"{}\" -t {} -p {} -osrt -f \"{}\" -l {} " .format(
+        whisper_model, finalsubname, whisper_threads, whisper_processors, inputwav, inputlang)
     if (whisper_speedup):
         command = command.replace("-osrt", "-osrt -su")
     print("Command: " + command)

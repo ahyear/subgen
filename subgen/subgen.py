@@ -95,6 +95,7 @@ def receive_webhook():
 def gen_subtitles(filename, inputwav, finalsubname, targetlang):
     strip_audio(filename)
     run_whisper(inputwav, finalsubname)
+    time.sleep(2)
     run_translate(finalsubname,targetlang)
 
 def strip_audio(filename):
@@ -119,7 +120,7 @@ def run_whisper(inputwav, finalsubname):
 
 def run_translate(finalsubname,targetlang):
     print("Starting translation")
-    file = open("{}".format(finalsubname), "r+") 
+    file = open("{}.srt".format(finalsubname), "r+") 
     json_translate = lt.translate("{}".format(file),"en","{}".format(targetlang))
     translation_data = json.loads(json_translate)
     translation = translation_data[translatedText].text

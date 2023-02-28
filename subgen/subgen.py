@@ -31,7 +31,8 @@ updaterepo = converttobool(os.getenv('UPDATEREPO', "True"))
 skipifinternalsublang = os.getenv('SKIPIFINTERNALSUBLANG', "eng")
 webhookport = os.getenv('WEBHOOKPORT', 8090)
 targetlang = os.getenv('TARGETLANG',"en")
-lt = LibreTranslateAPI(os.getenv('LIBRETRANSLATE',"http://127.0.0.1:5000" ))
+libretranslate = os.getenv('LIBRETRANSLATE',"http://127.0.0.1:5000" )
+lt = LibreTranslateAPI(libretranslate)
 
 app = Flask(__name__)
 
@@ -83,7 +84,7 @@ def receive_webhook():
             print("No speedup")
             finalsubname = "{0}/{1}.subgen.{2}.{3}".format(filepath, filenamenoextension, whisper_model, namesublang)
                 
-        gen_subtitles(fullpath, "{}.output.wav".format(fullpath), finalsubname)
+        gen_subtitles(fullpath, "{}.output.wav".format(fullpath), finalsubname, targetlang)
   
         if os.path.isfile("{}.output.wav".format(fullpath)):
             print("Deleting WAV workfile")
@@ -91,9 +92,10 @@ def receive_webhook():
 
     return ""
 
-def gen_subtitles(filename, inputwav, finalsubname):
+def gen_subtitles(filename, inputwav, finalsubname, targetlang):
     strip_audio(filename)
     run_whisper(inputwav, finalsubname)
+    run_translate(finalsubname,targetlang)
 
 def strip_audio(filename):
     print("Starting strip audio")
@@ -106,14 +108,28 @@ def strip_audio(filename):
 def run_whisper(inputwav, finalsubname):
     print("Starting whisper")
     os.chdir("/whisper.cpp")
-    command = lt.translate(("./main -m models/ggml-{}.bin -of \"{}\" -t {} -p {} -osrt -f \"{}\"" .format(
-        whisper_model, finalsubname, whisper_threads, whisper_processors, inputwav)),"en",targetlang)
+    command = ("./main -m models/ggml-{}.bin -of \"{}\" -t {} -p {} -osrt -f \"{}\"" .format(
+        whisper_model, finalsubname, whisper_threads, whisper_processors, inputwav))
     if (whisper_speedup):
         command = command.replace("-osrt", "-osrt -su")
     print("Command: " + command)
     subprocess.call(command, shell=True)
 
     print("Done with whisper")
+
+def run_translate(finalsubname,targetlang):
+    print("Starting translation")
+    file = open("{}".format(finalsubname), "r+") 
+    json_translate = lt.translate("{}".format(file),"en","{}".format(targetlang))
+    translation-data = json.loads(json-translate)
+    translation = translation-data[translatedText].text
+    print ("translation : " translation)
+    file.truncate(0)
+    file.write(translation)
+    file.close
+
+    print("Done with translation")
+
 
 def get_file_name(item_id, plexserver, plextoken):
     url = f"{plexserver}/library/metadata/{item_id}"

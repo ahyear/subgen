@@ -121,8 +121,8 @@ def run_translate(finalsubname,targetlang):
     print("Starting translation")
     file = open("{}".format(finalsubname), "r+") 
     json_translate = lt.translate("{}".format(file),"en","{}".format(targetlang))
-    translation-data = json.loads(json-translate)
-    translation = translation-data[translatedText].text
+    translation_data = json.loads(json_translate)
+    translation = translation_data[translatedText].text
     print ("translation : " translation)
     file.truncate(0)
     file.write(translation)

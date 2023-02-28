@@ -123,7 +123,7 @@ def run_translate(finalsubname,targetlang):
     json_translate = lt.translate("{}".format(file),"en","{}".format(targetlang))
     translation_data = json.loads(json_translate)
     translation = translation_data[translatedText].text
-    print ("translation : " translation)
+    print ("translation : " + translation)
     file.truncate(0)
     file.write(translation)
     file.close

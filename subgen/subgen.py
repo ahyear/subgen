@@ -122,10 +122,8 @@ def run_translate(finalsubname,targetlang):
     print("Starting translation")
     with open("{}.srt".format(finalsubname), 'r') as input_file:
         data = json.load(input_file)
-    json_translate = lt.translate("{}".format(data),"en","{}".format(targetlang))
-    translation_data = json.loads(json_translate)
-    translations = [item['translatedText'] for item in data]
-    print ("translation : " + translation)
+    translate = lt.translate("{}".format(data),"en","{}".format(targetlang))
+    print ("translation : " + translate)
     with open("{}.srt".format(finalsubname), 'w') as output_file:
         output_file.write('\n'.join(translations))
 

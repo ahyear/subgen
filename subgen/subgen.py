@@ -120,14 +120,14 @@ def run_whisper(inputwav, finalsubname):
 
 def run_translate(finalsubname,targetlang):
     print("Starting translation")
-    file = open("{}.srt".format(finalsubname), "r+") 
-    json_translate = lt.translate("{}".format(file),"en","{}".format(targetlang))
+    with open(finalsubname, 'r') as input_file:
+        data = json.load(input_file)
+    json_translate = lt.translate("{}".format(data),"en","{}".format(targetlang))
     translation_data = json.loads(json_translate)
-    translation = translation_data[translatedText].text
+    translations = [item['translatedText'] for item in data]
     print ("translation : " + translation)
-    file.truncate(0)
-    file.write(translation)
-    file.close
+    with open(finalsubname, 'w') as output_file:
+        output_file.write('\n'.join(translations))
 
     print("Done with translation")
 

@@ -128,13 +128,8 @@ def run_translate(finalsubname,targetlang):
     source_ascii = source_ascii.replace('\t',' ')
         
     print ("source : " +source)
-    
-    source_ascii = source.replace('5B','[')
-    source_ascii = source_ascii.replace('5d',']')
-    source_ascii = source_ascii.replace('3E','>')
-    with open("{}.srt".format(finalsubname), 'r') as data:
-        to_translate = data.read()
-    translate = lt.translate("{}".format(to_translate),"en","{}".format(targetlang))
+
+    translate = lt.translate("{}".format(source_ascii),"en","{}".format(targetlang))
     translate = translate.replace('5B','[')
     translate = translate.replace('5d',']')
     translate = translate.replace('3E','>')

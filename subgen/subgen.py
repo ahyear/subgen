@@ -121,19 +121,17 @@ def run_whisper(inputwav, finalsubname):
 def run_translate(finalsubname,targetlang):
     print("Starting translation")
     with open("{}.srt".format(finalsubname), 'r') as extract:
-        source = extract.read(100)
+        source = extract.read()
     source_ascii = source.replace('[','5B')
     source_ascii = source_ascii.replace(']','5d')
     source_ascii = source_ascii.replace('>','3E')
     source_ascii = source_ascii.replace('\t',' ')
-        
-    print ("source : " +source)
 
     translate = lt.translate("{}".format(source_ascii),"en","{}".format(targetlang))
     translate = translate.replace('5B','[')
     translate = translate.replace('5d',']')
     translate = translate.replace('3E','>')
-    print ("translation : " + translate[:100])
+    print ("translation : " + translate[:1000])
     with open("{}.srt".format(finalsubname), 'w') as output_file:
         output_file.write(translate)
 

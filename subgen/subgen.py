@@ -72,9 +72,9 @@ def receive_webhook():
         elif os.path.isfile("{}.output.wav".format(fullpath)):
             print("WAV file already exists, we're assuming it's processing and skipping it")
             return "WAV file already exists, we're assuming it's processing and skipping it"
-  #      elif len(glob.glob("{}/{}*subgen*".format(filepath, filenamenoextension))) > 0:
-  #          print("We already have a subgen created for this file, skipping it")
-  #         return "We already have a subgen created for this file, skipping it"
+        elif len(glob.glob("{}/{}*subgen*".format(filepath, filenamenoextension))) > 0:
+            print("We already have a subgen created for this file, skipping it")
+           return "We already have a subgen created for this file, skipping it"
            
         if whisper_speedup:
             print("This is a speedup run!")
@@ -94,7 +94,7 @@ def receive_webhook():
 
 def gen_subtitles(filename, inputwav, finalsubname, targetlang):
     strip_audio(filename)
-  #  run_whisper(inputwav, finalsubname)
+    run_whisper(inputwav, finalsubname)
     time.sleep(2)
     run_translate(finalsubname,targetlang)
 
@@ -121,10 +121,11 @@ def run_whisper(inputwav, finalsubname):
 def run_translate(finalsubname,targetlang):
     print("Starting translation")
     with open("{}.srt".format(finalsubname), 'r') as data:
-        translate = lt.translate("{}".format(data),"en","{}".format(targetlang))
+                to_translate = data.read()
+        translate = lt.translate("{}".format(to_translate),"en","{}".format(targetlang))
     print ("translation : " + translate)
     with open("{}.srt".format(finalsubname), 'w') as output_file:
-        output_file.write('\n'.join(translate))
+        output_file.write(translate)
 
     print("Done with translation")
 

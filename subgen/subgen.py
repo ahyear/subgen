@@ -122,7 +122,16 @@ def run_translate(finalsubname,targetlang):
     print("Starting translation")
     with open("{}.srt".format(finalsubname), 'r') as extract:
         source = extract.read(100)
+    source_ascii = source.replace('[','5B')
+    source_ascii = source_ascii.replace(']','5d')
+    source_ascii = source_ascii.replace('>','3E')
+    source_ascii = source_ascii.replace('\t',' ')
+        
     print ("source : " +source)
+    
+    source_ascii = source.replace('5B','[')
+    source_ascii = source_ascii.replace('5d',']')
+    source_ascii = source_ascii.replace('3E','>')
     with open("{}.srt".format(finalsubname), 'r') as data:
         to_translate = data.read()
     translate = lt.translate("{}".format(to_translate),"en","{}".format(targetlang))

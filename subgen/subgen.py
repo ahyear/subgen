@@ -122,9 +122,9 @@ def run_translate(finalsubname,targetlang):
     print("Starting translation")
     with open("{}.srt".format(finalsubname), 'r') as data:
         translate = lt.translate("{}".format(data),"en","{}".format(targetlang))
-    print ("translation : " + translate)
+    print ("translation : " + print (translate))
     with open("{}.srt".format(finalsubname), 'w') as output_file:
-        translate
+        output_file.write('\n'.join(translate))
 
     print("Done with translation")
 
